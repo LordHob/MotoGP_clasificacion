@@ -110,6 +110,37 @@
   }
 
   /* ---------- Table ---------- */
+  .scroll-top{
+    position:relative;
+    margin:0 18px 6px;
+    height:14px;
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:7px;
+  }
+  .scroll-top-thumb{
+    position:absolute;
+    top:1px;
+    left:1px;
+    height:10px;
+    min-width:30px;
+    background:#4a5262;
+    border-radius:5px;
+    cursor:grab;
+    touch-action:none;
+  }
+  .scroll-top-thumb:hover{background:var(--accent);}
+  .scroll-top-thumb.dragging{background:var(--accent);cursor:grabbing;}
+
+  .table-wrap::-webkit-scrollbar{height:12px;}
+  .table-wrap::-webkit-scrollbar-track{background:var(--panel);}
+  .table-wrap::-webkit-scrollbar-thumb{background:#4a5262;border-radius:6px;border:2px solid var(--panel);}
+  .table-wrap::-webkit-scrollbar-thumb:hover{background:var(--accent);}
+  .table-wrap{
+    scrollbar-width:auto;
+    scrollbar-color:#4a5262 var(--panel);
+  }
+
   .table-wrap{
     overflow-x:auto;
     overflow-y:visible;
@@ -133,7 +164,7 @@
     background:var(--panel);
     position:sticky;
     top:0;
-    z-index:3;
+    z-index:2;
     font-weight:600;
   }
   .th-round{
@@ -172,7 +203,7 @@
   th.col-rank,th.col-flag,th.col-rider,th.col-team,th.col-total,
   td.col-rank,td.col-flag,td.col-rider,td.col-team,td.col-total{
     position:sticky;
-    z-index:2;
+    z-index:3;
     background:var(--panel);
   }
   th.col-rank,td.col-rank{left:0;width:30px;min-width:30px;}
@@ -182,11 +213,8 @@
     left:214px;width:118px;min-width:118px;text-align:left;padding-left:10px;
     font-size:11.5px;color:var(--text-dim);border-right:2px solid var(--border);
   }
-  td.col-rider,td.col-rank,td.col-flag,td.col-team{z-index:1;}
   th.col-total,td.col-total{right:0;}
-  th.col-total{z-index:3;}
   td.col-total{
-    z-index:1;
     font-family:'Oswald',sans-serif;
     font-weight:700;
     font-size:15px;
@@ -301,7 +329,8 @@
 </div>
 <p class="hint">Toca cualquier celda para introducir o corregir la posición de un piloto en esa Sprint o GP. Los puntos y el orden se recalculan solos.</p>
 
-<div class="table-wrap">
+<div class="scroll-top" id="scrollTopTrack"><div class="scroll-top-thumb" id="scrollTopThumb"></div></div>
+<div class="table-wrap" id="tableWrap">
   <table id="table">
     <thead>
       <tr id="rowRounds"></tr>
@@ -530,21 +559,21 @@ const DEFAULT_RESULTS = {
   "8-6-sp": 1,
   "10-6-sp": 7,
   "14-6-sp": 5,
-  "4-6-gp": 1,
-  "9-6-gp": 2,
-  "7-6-gp": 3,
-  "0-6-gp": 4,
-  "18-6-gp": 5,
-  "11-6-gp": 6,
-  "15-6-gp": 7,
-  "6-6-gp": 8,
-  "13-6-gp": 9,
-  "10-6-gp": 10,
-  "17-6-gp": 11,
-  "23-6-gp": 12,
-  "12-6-gp": 13,
-  "19-6-gp": 14,
-  "21-6-gp": 15,
+  "0-6-gp": 12,
+  "1-6-gp": 3,
+  "2-6-gp": 1,
+  "4-6-gp": 4,
+  "5-6-gp": 2,
+  "6-6-gp": 11,
+  "7-6-gp": 10,
+  "9-6-gp": 8,
+  "10-6-gp": 6,
+  "11-6-gp": 9,
+  "12-6-gp": 7,
+  "13-6-gp": 14,
+  "14-6-gp": 5,
+  "17-6-gp": 15,
+  "18-6-gp": 13,
   // Ronda 7
   "0-7-sp": 4,
   "1-7-sp": 2,
@@ -784,10 +813,101 @@ function renderBody(filter=""){
   }).join("");
 }
 
+/* ============ BARRA DE SCROLL SUPERIOR (custom, no depende del navegador) ============ */
+const tableWrap = document.getElementById("tableWrap");
+const scrollTrack = document.getElementById("scrollTopTrack");
+const scrollThumb = document.getElementById("scrollTopThumb");
+
+function updateThumb(){
+  const table = document.getElementById("table");
+  const trackWidth = scrollTrack.clientWidth;
+  const wrapWidth = tableWrap.clientWidth;
+  const contentWidth = table.scrollWidth;
+
+  if(contentWidth <= wrapWidth){
+    scrollThumb.style.width = trackWidth + "px";
+    scrollThumb.style.left = "0px";
+    scrollThumb.style.display = "none";
+    return;
+  }
+  scrollThumb.style.display = "block";
+
+  const thumbWidth = Math.max(30, trackWidth * (wrapWidth / contentWidth));
+  const maxThumbLeft = trackWidth - thumbWidth;
+  const maxScroll = contentWidth - wrapWidth;
+  const ratio = maxScroll > 0 ? (tableWrap.scrollLeft / maxScroll) : 0;
+
+  scrollThumb.style.width = thumbWidth + "px";
+  scrollThumb.style.left = (ratio * maxThumbLeft) + "px";
+}
+
+// El scroll real de la tabla (rueda, trackpad, barra inferior nativa, flechas) mueve el thumb
+tableWrap.addEventListener("scroll", updateThumb);
+window.addEventListener("resize", updateThumb);
+window.addEventListener("load", updateThumb);
+if(document.fonts && document.fonts.ready){
+  document.fonts.ready.then(updateThumb);
+}
+
+// Arrastrar el thumb mueve la tabla
+let dragging = false;
+let dragStartX = 0;
+let dragStartScroll = 0;
+
+function startDrag(clientX){
+  dragging = true;
+  dragStartX = clientX;
+  dragStartScroll = tableWrap.scrollLeft;
+  scrollThumb.classList.add("dragging");
+}
+function moveDrag(clientX){
+  if(!dragging) return;
+  const table = document.getElementById("table");
+  const trackWidth = scrollTrack.clientWidth;
+  const wrapWidth = tableWrap.clientWidth;
+  const contentWidth = table.scrollWidth;
+  const thumbWidth = Math.max(30, trackWidth * (wrapWidth / contentWidth));
+  const maxThumbLeft = trackWidth - thumbWidth;
+  const maxScroll = contentWidth - wrapWidth;
+
+  const deltaPx = clientX - dragStartX;
+  const deltaScroll = maxThumbLeft > 0 ? (deltaPx / maxThumbLeft) * maxScroll : 0;
+  tableWrap.scrollLeft = Math.max(0, Math.min(maxScroll, dragStartScroll + deltaScroll));
+}
+function endDrag(){
+  dragging = false;
+  scrollThumb.classList.remove("dragging");
+}
+
+scrollThumb.addEventListener("mousedown", (e)=>{ e.preventDefault(); startDrag(e.clientX); });
+window.addEventListener("mousemove", (e)=>{ if(dragging) moveDrag(e.clientX); });
+window.addEventListener("mouseup", endDrag);
+
+scrollThumb.addEventListener("touchstart", (e)=>{ startDrag(e.touches[0].clientX); }, {passive:true});
+window.addEventListener("touchmove", (e)=>{ if(dragging) moveDrag(e.touches[0].clientX); }, {passive:true});
+window.addEventListener("touchend", endDrag);
+
+// Clic en la barra (fuera del thumb) salta directamente a ese punto
+scrollTrack.addEventListener("mousedown", (e)=>{
+  if(e.target === scrollThumb) return;
+  const table = document.getElementById("table");
+  const trackRect = scrollTrack.getBoundingClientRect();
+  const trackWidth = scrollTrack.clientWidth;
+  const wrapWidth = tableWrap.clientWidth;
+  const contentWidth = table.scrollWidth;
+  const thumbWidth = Math.max(30, trackWidth * (wrapWidth / contentWidth));
+  const maxThumbLeft = trackWidth - thumbWidth;
+  const maxScroll = contentWidth - wrapWidth;
+  const clickX = e.clientX - trackRect.left - thumbWidth/2;
+  const ratio = maxThumbLeft > 0 ? Math.max(0, Math.min(1, clickX / maxThumbLeft)) : 0;
+  tableWrap.scrollLeft = ratio * maxScroll;
+});
+
 /* ============ RENDER GLOBAL ============ */
 function renderAll(filter){
   renderHead();
   renderBody(filter);
+  updateThumb();
 }
 renderAll("");
 
