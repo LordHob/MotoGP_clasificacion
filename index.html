@@ -379,37 +379,37 @@ const CALENDAR = [
 ];
 
 const RIDERS = [
-  {name:"Marco Bezzecchi",       cc:"it", team:"Aprilia"}, // NUMERO 0
-  {name:"Jorge Martín",          cc:"es", team:"Aprilia"}, // NUMERO 1
-  {name:"Pedro Acosta",          cc:"es", team:"KTM"}, // NUMERO 2
-  {name:"Marc Márquez",          cc:"es", team:"Ducati"}, // NUMERO 3
-  {name:"Fabio Di Giannantonio", cc:"it", team:"Ducati VR46"}, // NUMERO 4
-  {name:"Raúl Fernández",        cc:"es", team:"Aprilia Trackhouse"}, // NUMERO 5
-  {name:"Ai Ogura",              cc:"jp", team:"Aprilia Trackhouse"}, // NUMERO 6
-  {name:"Francesco Bagnaia",     cc:"it", team:"Ducati"}, // NUMERO 7
-  {name:"Álex Márquez",          cc:"es", team:"Ducati Gresini"}, // NUMERO 8
-  {name:"Fermín Aldeguer",       cc:"es", team:"Ducati Gresini"}, // NUMERO 9
-  {name:"Franco Morbidelli",     cc:"it", team:"Ducati VR46"}, // NUMERO 10
-  {name:"Luca Marini",           cc:"it", team:"Honda"}, // NUMERO 11
-  {name:"Joan Mir",              cc:"es", team:"Honda"}, // NUMERO 12
-  {name:"Diogo Moreira",         cc:"br", team:"Honda LCR"}, // NUMERO 13
-  {name:"Johann Zarco",          cc:"fr", team:"Honda LCR"}, // NUMERO 14
-  {name:"Brad Binder",           cc:"za", team:"KTM"}, // NUMERO 15
-  {name:"Enea Bastianini",       cc:"it", team:"KTM Tech3"}, // NUMERO 16
-  {name:"Maverick Viñales",      cc:"es", team:"KTM Tech3"}, // NUMERO 17
-  {name:"Fabio Quartararo",      cc:"fr", team:"Yamaha"}, // NUMERO 18
-  {name:"Alex Rins",             cc:"es", team:"Yamaha"}, // NUMERO 19
-  {name:"Toprak Razgatlıoğlu",   cc:"tr", team:"Yamaha Pramac"}, // NUMERO 20
-  {name:"Jack Miller",           cc:"au", team:"Yamaha Pramac"}, // NUMERO 21
+  {name:"Marco Bezzecchi",       cc:"it", team:"Aprilia"},
+  {name:"Jorge Martín",          cc:"es", team:"Aprilia"},
+  {name:"Pedro Acosta",          cc:"es", team:"KTM"},
+  {name:"Marc Márquez",          cc:"es", team:"Ducati"},
+  {name:"Fabio Di Giannantonio", cc:"it", team:"Ducati VR46"},
+  {name:"Raúl Fernández",        cc:"es", team:"Aprilia Trackhouse"},
+  {name:"Ai Ogura",              cc:"jp", team:"Aprilia Trackhouse"},
+  {name:"Francesco Bagnaia",     cc:"it", team:"Ducati"},
+  {name:"Álex Márquez",          cc:"es", team:"Ducati Gresini"},
+  {name:"Fermín Aldeguer",       cc:"es", team:"Ducati Gresini"},
+  {name:"Franco Morbidelli",     cc:"it", team:"Ducati VR46"},
+  {name:"Luca Marini",           cc:"it", team:"Honda"},
+  {name:"Joan Mir",              cc:"es", team:"Honda"},
+  {name:"Diogo Moreira",         cc:"br", team:"Honda LCR"},
+  {name:"Johann Zarco",          cc:"fr", team:"Honda LCR"},
+  {name:"Brad Binder",           cc:"za", team:"KTM"},
+  {name:"Enea Bastianini",       cc:"it", team:"KTM Tech3"},
+  {name:"Maverick Viñales",      cc:"es", team:"KTM Tech3"},
+  {name:"Fabio Quartararo",      cc:"fr", team:"Yamaha"},
+  {name:"Alex Rins",             cc:"es", team:"Yamaha"},
+  {name:"Toprak Razgatlıoğlu",   cc:"tr", team:"Yamaha Pramac"},
+  {name:"Jack Miller",           cc:"au", team:"Yamaha Pramac"},
   // Pilotos sustitutos: solo corrieron las rondas indicadas en "rounds".
   // El resto de casillas quedan bloqueadas (no se les puede asignar puntos).
-  {name:"Lorenzo Savadori",      cc:"it", team:"Aprilia",       rounds:[4]}, // NUMERO 22
-  {name:"Augusto Fernández",     cc:"es", team:"Yamaha",        rounds:[4,6,10]}, // NUMERO 23
-  {name:"Iker Lecuona",          cc:"es", team:"Ducati Gresini",rounds:[8]}, // NUMERO 24
-  {name:"Michele Pirro",         cc:"it", team:"Ducati Gresini",rounds:[1,7]}, // NUMERO 25
-  {name:"Cal Crutchlow",         cc:"gb", team:"Honda LCR Castrol", rounds:[7,8,9,10,11]}, // NUMERO 26
-  {name:"Jonas Folger",          cc:"de", team:"KTM Tech3",     rounds:[5]}, // NUMERO 27
-  {name:"Pol Espargaró",         cc:"es", team:"KTM Tech3",     rounds:[12]}, // NUMERO 28
+  {name:"Lorenzo Savadori",      cc:"it", team:"Aprilia",       rounds:[4]},
+  {name:"Augusto Fernández",     cc:"es", team:"Yamaha",        rounds:[4,6,10]},
+  {name:"Iker Lecuona",          cc:"es", team:"Ducati Gresini",rounds:[8]},
+  {name:"Michele Pirro",         cc:"it", team:"Ducati Gresini",rounds:[1,7]},
+  {name:"Cal Crutchlow",         cc:"gb", team:"Honda LCR Castrol", rounds:[7,8,9,10,11,12]},
+  {name:"Jonas Folger",          cc:"de", team:"KTM Tech3",     rounds:[5]},
+  {name:"Pol Espargaró",         cc:"es", team:"KTM Tech3",     rounds:[12]},
 ];
 
 function flagImg(cc, alt){
@@ -560,21 +560,21 @@ const DEFAULT_RESULTS = {
   "8-6-sp": 1,
   "10-6-sp": 7,
   "14-6-sp": 5,
-  "0-6-gp": 12,
-  "1-6-gp": 3,
-  "2-6-gp": 1,
-  "4-6-gp": 4,
-  "5-6-gp": 2,
-  "6-6-gp": 11,
-  "7-6-gp": 10,
-  "9-6-gp": 8,
-  "10-6-gp": 6,
-  "11-6-gp": 9,
-  "12-6-gp": 7,
-  "13-6-gp": 14,
-  "14-6-gp": 5,
-  "17-6-gp": 15,
-  "18-6-gp": 13,
+  "0-6-gp": 4,
+  "4-6-gp": 1,
+  "6-6-gp": 8,
+  "7-6-gp": 3,
+  "9-6-gp": 2,
+  "10-6-gp": 10,
+  "11-6-gp": 6,
+  "12-6-gp": 13,
+  "13-6-gp": 9,
+  "15-6-gp": 7,
+  "17-6-gp": 11,
+  "18-6-gp": 5,
+  "19-6-gp": 14,
+  "21-6-gp": 15,
+  "23-6-gp": 12,
   // Ronda 7
   "0-7-sp": 4,
   "1-7-sp": 2,
@@ -700,7 +700,7 @@ const DEFAULT_RESULTS = {
   "19-11-gp": 14,
   "20-11-gp": 15,
   "21-11-gp": 12,
-   // Ronda 12
+  // Ronda 12
   "1-12-sp": 1,
   "6-12-sp": 2,
   "0-12-sp": 3,
@@ -732,11 +732,15 @@ const STORAGE_KEY = "motogp2026_results_v2";
 let results = loadResults();
 
 function loadResults(){
+  let saved = {};
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
-    if(raw) return JSON.parse(raw);
+    if(raw) saved = JSON.parse(raw);
   }catch(e){}
-  return {...DEFAULT_RESULTS};
+  // El código (DEFAULT_RESULTS) siempre aporta la base; lo guardado en el
+  // navegador se superpone encima, así que tus ediciones manuales no se
+  // pierden, pero las rondas nuevas que yo añada en el código sí aparecen.
+  return {...DEFAULT_RESULTS, ...saved};
 }
 function saveResults(){
   localStorage.setItem(STORAGE_KEY, JSON.stringify(results));
